@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "artificial-pancreas-benchmark"
+version = "0.1.0"
+description = "Falsification benchmark for a neural-network-controlled artificial pancreas (Simglucose)"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Masaki Waga" }]
+requires-python = ">=3.10"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+]
+dependencies = [
+  # Simglucose with PR #99 (basal units); the revision defines the benchmark semantics.
+  "simglucose @ git+https://github.com/LI-Jialu/simglucose@fb7f1674db3337790abefbdc70a9fa86d1235f14",
+  # Simglucose and gym==0.9.4 import pkg_resources, removed in setuptools 81.
+  "setuptools<81",
+  "numpy",
+  "pandas",
+  "rtamt",
+  # Inference of the default (RecurrentPPO) controller.
+  "torch",
+  "stable-baselines3",
+  "sb3-contrib",
+  "gymnasium",
+]
+
+[project.optional-dependencies]
+train = ["tensorboard", "tqdm", "rich"]
+falcaun = ["jep"]
+psy-taliro = ["psy-taliro==3.2.0"]
+test = ["pytest"]
+
+[project.scripts]
+apbench-simulate = "apbench.simulate:main"
+apbench-random-falsify = "apbench.random_falsify:main"
+apbench-train = "apbench.rl.train:main"
+apbench-evaluate = "apbench.rl.evaluate:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"apbench.controllers" = ["evaluation.json"]
+"apbench.controllers.ppo" = ["*.zip", "*.json", "*.jsonl"]
+"apbench.controllers.rppo" = ["*.zip", "*.json", "*.jsonl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+  "ignore::DeprecationWarning",
+  "ignore:pkg_resources is deprecated:UserWarning",
+]
+
+[tool.ruff]
+line-length = 119
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
