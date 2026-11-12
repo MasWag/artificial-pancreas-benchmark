@@ -1,0 +1,7 @@
+# Ψ-TaLiRo example: install on top of the reference environment
+#   pip install -r requirements/py312-lock.txt -r examples/psy-taliro/requirements.txt && pip install --no-deps -e .
+# These are the only packages added to requirements/py312-lock.txt (resolved for Python 3.12).
+psy-taliro==3.2.0
+pybanquo==0.1.1
+attrs==26.1.0
+sortedcontainers==2.4.0
